@@ -48,6 +48,8 @@ async def delete_book(delete_book: str):
     for i in range(len(BOOKS)):
         if BOOKS[i].get('title').casefold() == delete_book.casefold():
             BOOKS.pop(i)
+            break
+
             
 @app.get('/books/')
 async def get_author(get_author: str):
