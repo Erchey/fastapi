@@ -1,7 +1,7 @@
 from typing import Annotated
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-from fastapi import Depends, APIRouter, HTTPException, Path
+from fastapi import Depends, APIRouter, HTTPException
 from starlette import status
 from models import Users
 from passlib.context import CryptContext
@@ -50,4 +50,14 @@ async def change_password(user:user_dependency, db: db_dependency, user_request:
 
     else:
         raise HTTPException(status_code=404, detail='Error on password change!')
+    
+@router.put('/phone', status_code=status.HTTP_204_NO_CONTENT)
+async def change_phone_number(user:user_dependency, db:db_dependency, phone_number: str):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authorization Failed')
+    
+    user_model = db.query(Users).filter(Users.id == user.get('id')).first()
+    user_model.phone_number = phone_number
+    db.add(user_model)
+    db.commit()
     
