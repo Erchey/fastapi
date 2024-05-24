@@ -53,8 +53,9 @@ async def create_todo(user: user_dependency, db: db_dependency, todo_request: To
 
     db.add(todo_model)
     db.commit()
+    return todo_model
 
-@router.put('/todos/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.put('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def update_todos(user: user_dependency, db: db_dependency, todo_request: TodoRequest, todo_id: int):
 
     if user is None:
@@ -73,7 +74,7 @@ async def update_todos(user: user_dependency, db: db_dependency, todo_request: T
     else:
         raise HTTPException(status_code=404, detail='Todo not found.')
     
-@router.delete('/todos/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT) # Found errors in pytest was due to inconsistent endpoint path naming
 async def delete_todos(user: user_dependency, db: db_dependency, todo_id: int = Path(gt=0)):
 
     if user is None:
@@ -84,4 +85,3 @@ async def delete_todos(user: user_dependency, db: db_dependency, todo_id: int = 
     else:
         db.query(Todos).filter(Todos.id == todo_id).filter(Todos.owner_id == user.get('id')).delete()
         db.commit()
-    

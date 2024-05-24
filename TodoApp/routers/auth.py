@@ -87,6 +87,8 @@ async def create_user(db: db_dependency, create_user_request: CreateUserRequest)
         role=create_user_request.role,
         is_active=True
     )
+    if create_user_model:
+        raise HTTPException(status_code=201, detail='User Successfully Created')
     
 
     db.add(create_user_model)
