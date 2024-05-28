@@ -61,7 +61,6 @@ def test_todo():
 
 @pytest.fixture
 def test_user():
-    db = TestingSessionLocal()
     user = Users(
         username="codingwithrobytest",
         email="codingwithrobytest@email.com",
@@ -71,6 +70,7 @@ def test_user():
         role="admin",
         phone_number="(111)-111-1111"
     )
+    db = TestingSessionLocal()
     db.add(user)
     db.commit()
     yield user
