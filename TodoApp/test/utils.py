@@ -1,6 +1,6 @@
-# import sys
-# import os
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.pool import StaticPool
@@ -12,8 +12,10 @@ import pytest
 from TodoApp.models import Todos, Users
 from TodoApp.routers.auth import bcrypt_context
 
+# Set up the test database URL
 SQLALCHEMY_DATABASE_URL = "sqlite:///./testdb.db"
 
+# Create an engine and a session for the test database
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False},
@@ -22,8 +24,10 @@ engine = create_engine(
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Create all tables in the test database
 Base.metadata.create_all(bind=engine)
 
+# Override the get_db dependency to use the test database
 def override_get_db():
     db = TestingSessionLocal()
     try:
@@ -31,13 +35,16 @@ def override_get_db():
     finally:
         db.close()
 
+# Override the get_current_user dependency to return an authenticated admin user
 def override_get_current_user():
-    return {'username': 'codingwithrobytest', 'id': 1, 'user_role': 'admin'}
+    return {'username': 'erchey', 'id': 1, 'role': 'admin'}
 
+# Create a test client
 client = TestClient(app)
 
 @pytest.fixture
 def test_todo():
+    db = TestingSessionLocal()
     todo = Todos(
         title="Learn to code!",
         description="Need to learn everyday!",
@@ -45,18 +52,16 @@ def test_todo():
         complete=False,
         owner_id=1,
     )
-
-    db = TestingSessionLocal()
     db.add(todo)
     db.commit()
     yield todo
-    with engine.connect() as connection:
-        connection.execute(text("DELETE FROM todos;"))
-        connection.commit()
-
+    db.query(Todos).delete()
+    db.commit()
+    db.close()
 
 @pytest.fixture
 def test_user():
+    db = TestingSessionLocal()
     user = Users(
         username="codingwithrobytest",
         email="codingwithrobytest@email.com",
@@ -66,11 +71,9 @@ def test_user():
         role="admin",
         phone_number="(111)-111-1111"
     )
-    db = TestingSessionLocal()
     db.add(user)
     db.commit()
     yield user
-    with engine.connect() as connection:
-        connection.execute(text("DELETE FROM users;"))
-        connection.commit()
-
+    db.query(Users).delete()
+    db.commit()
+    db.close()
