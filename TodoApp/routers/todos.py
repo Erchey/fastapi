@@ -1,15 +1,29 @@
-from typing import Annotated
+import os
+from typing import Annotated, Optional
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-from fastapi import Depends, APIRouter, HTTPException, Path
+from fastapi import Depends, APIRouter, HTTPException, Path, Request
 from starlette import status
+from TodoApp import models
 from ..models import Todos
-from ..database import SessionLocal
+from ..database import SessionLocal, engine
 from .auth import get_current_user
 
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
-router = APIRouter()
 
+router = APIRouter(
+    prefix="/todos",
+    tags=["todos"],
+    responses={404: {"description": "Not found"}}
+)
+
+models.Base.metadata.create_all(bind=engine)
+
+
+templates = Jinja2Templates(directory="TodoApp/templates")
+ 
 
 def get_db():
     db = SessionLocal()
@@ -24,10 +38,14 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 class TodoRequest(BaseModel):
     title: str = Field(min_length=3)
-    description: str = Field(min_length=3, max_length=100)
+    description: Optional[str] = Field(min_length=3, max_length=100)
     priority: int = Field(gt=0, lt=6)
     complete: bool
 
+
+@router.get("/test")
+async def test(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 
 @router.get('/')
 async def read_all(user: user_dependency, db: db_dependency):
@@ -85,3 +103,4 @@ async def delete_todos(user: user_dependency, db: db_dependency, todo_id: int = 
     else:
         db.query(Todos).filter(Todos.id == todo_id).filter(Todos.owner_id == user.get('id')).delete()
         db.commit()
+
