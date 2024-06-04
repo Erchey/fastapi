@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Annotated, Optional
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
@@ -9,16 +9,33 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
 router = APIRouter(
     prefix='/auth',
-    tags=['auth']
+    tags=['auth'],
+    responses={401: {"user": "Not authorized"}}
 )
 
 SECRET_KEY = '34a1ea65c75e2d8f6606ab1f4920ce376e243fa99367adea12eba4332799a4b1'
 ALGORITHM = 'HS256'
 
+templates = Jinja2Templates(directory="TodoApp/templates")
+
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
+
+class LoginForm:
+    def __init__(self, request: Request) -> None:
+        self.request: Request = request
+        self.username: Optional[str] = None
+        self.password: Optional[str] = None
+        
+    async def create_oauth_form(self):
+        form = await self.request.form()
+        self.username = form.get("email")
+        self.password = form.get("password")
 
 
 class CreateUserRequest(BaseModel):
@@ -104,5 +121,13 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
                                 detail='Could not validate user.')
     token = create_access_token(user.username, user.id, user.role, timedelta(minutes=20))
     return {'access_token': token, 'token_type': 'bearer'}
+
+@router.get("/", response_class=HTMLResponse)
+async def user_login(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
 
   
