@@ -1,0 +1,22 @@
+[
+  "TodoApp/test/test_admin.py::test_admin_delete_todo",
+  "TodoApp/test/test_admin.py::test_admin_delete_todo_not_found",
+  "TodoApp/test/test_admin.py::test_admin_read_all_authenticated",
+  "TodoApp/test/test_auth.py::test_authenticate_user",
+  "TodoApp/test/test_auth.py::test_create_access_token",
+  "TodoApp/test/test_auth.py::test_get_current_user_valid_token",
+  "TodoApp/test/test_example.py::test_list",
+  "TodoApp/test/test_example.py::test_person_initialization",
+  "TodoApp/test/test_main.py::test_return_health_check",
+  "TodoApp/test/test_todos.py::test_create_todo",
+  "TodoApp/test/test_todos.py::test_delete_todo",
+  "TodoApp/test/test_todos.py::test_delete_todo_not_found",
+  "TodoApp/test/test_todos.py::test_read_one_authenticated",
+  "TodoApp/test/test_todos.py::test_read_one_authenticated_not_found",
+  "TodoApp/test/test_todos.py::test_update_todo",
+  "TodoApp/test/test_todos.py::test_update_todo_not_found",
+  "TodoApp/test/test_users.py::test_change_password_invalid_current_password",
+  "TodoApp/test/test_users.py::test_change_password_success",
+  "TodoApp/test/test_users.py::test_change_phone_number_success",
+  "TodoApp/test/test_users.py::test_return_user"
+]

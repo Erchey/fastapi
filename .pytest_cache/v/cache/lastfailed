@@ -1,0 +1,20 @@
+{
+  "TodoApp/test/test_main.py::test_return_health_check": true,
+  "TodoApp/test/test_admin.py::TestClient": true,
+  "TodoApp/test/test_admin.py::test_admin_read_all_authenticated": true,
+  "TodoApp/test/test_admin.py::test_admin_delete_todo": true,
+  "TodoApp/test/test_auth.py::TestClient": true,
+  "TodoApp/test/test_auth.py::test_create_access_token": true,
+  "TodoApp/test/test_auth.py::test_get_current_user_valid_token": true,
+  "TodoApp/test/test_todos.py::TestClient": true,
+  "TodoApp/test/test_todos.py::test_read_one_authenticated": true,
+  "TodoApp/test/test_todos.py::test_create_todo": true,
+  "TodoApp/test/test_todos.py::test_update_todo": true,
+  "TodoApp/test/test_todos.py::test_update_todo_not_found": true,
+  "TodoApp/test/test_todos.py::test_delete_todo": true,
+  "TodoApp/test/test_users.py::TestClient": true,
+  "TodoApp/test/test_users.py::test_return_user": true,
+  "TodoApp/test/test_users.py::test_change_password_success": true,
+  "TodoApp/test/test_users.py::test_change_password_invalid_current_password": true,
+  "TodoApp/test/test_users.py::test_change_phone_number_success": true
+}
