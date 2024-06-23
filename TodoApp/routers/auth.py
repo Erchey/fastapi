@@ -1,3 +1,4 @@
+import os
 import sys
 sys.path.append("..")
 
@@ -15,9 +16,11 @@ from jose import jwt, JWTError
 
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 
 
-SECRET_KEY = '34a1ea65c75e2d8f6606ab1f4920ce376e243fa99367adea12eba4332799a4b1'
+load_dotenv(dotenv_path='keys.env')
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = 'HS256'
 
 templates = Jinja2Templates(directory="TodoApp/templates")
