@@ -1,2 +1,0 @@
-34a1ea65c75e2d8f6606ab1f4920ce376e243fa99367adea12eba4332799a4b1==new-placeholder-database-key
-postgresql://postgres:7UVbyoKgnkQ4T3dD@extensively-eminent-albatross.data-1.use1.tembo.io:5432/postgres==new-placeholder-auth-key
