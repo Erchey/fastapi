@@ -10,16 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out
-        uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Load environment variables from GitHub Secrets
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "TEST_DB_ENV =${{ secrets.TEST_DB_ENV }}" >> $GITHUB_ENV
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.12'
-
-      - name: Set up environment variables
-        run: echo "DATABASE_URL=GITHUB_ENV"
 
       - name: Install dependencies
         run: |
